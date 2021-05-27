@@ -2,10 +2,16 @@
     @testable import cURLRequest
 
     final class cURLRequestTests: XCTestCase {
-        func testExample() {
-            // This is an example of a functional test case.
-            // Use XCTAssert and related functions to verify your tests produce the correct
-            // results.
-            XCTAssertEqual(cURLRequest().text, "Hello, World!")
+
+        func testPrettyJSON() {
+
+            let inputData = #"{"foo":"bar","faz":"baz"}"#.data(using: .utf8)!
+            do {
+            let prettyString = try inputData.prettyJSON()
+            let expected = "{\n  \"foo\" : \"bar\",\n  \"faz\" : \"baz\"\n}"
+            XCTAssertEqual(expected, prettyString)
+            } catch {
+                XCTFail("Unable to convert")
+            }
         }
     }
