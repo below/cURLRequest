@@ -21,22 +21,23 @@ public extension URLRequest {
             if let headers = self.allHTTPHeaderFields
             {
                 for (key, value) in headers {
-                    command.append(" \\\n\t")
-                    command.append("-H '\(key): \(value)'")
+                    command.append(" \\\\\n\t-H \"\(key): \(value)\"")
                 }
             }
 
-//            if let bodyData = self.httpBody {
-//                do {
-//                    let jsonObject = try JSONSerialization.jsonObject(with: bodyData, options: [])
-//                    let prettyJSON = try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
-//                    let prettyString = String(data: prettyJSON, encoding: .utf8)
-//                } catch {
-//
-//                }
-//            }
+            if let bodyData = self.httpBody {
+                do {
+                    let prettyJsonString = try bodyData.prettyJSON()
+                    let commandLineString = prettyJsonString.replacingOccurrences(of: "\"", with: "\\\"")
+                    command.append(" \\\\\n -d \"\(commandLineString)\"")
+
+                } catch {
+
+                }
+            }
 
             return command
         }
     }
 }
+
