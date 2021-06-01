@@ -26,12 +26,23 @@ public extension URLRequest {
             }
 
             if let bodyData = self.httpBody {
-                do {
-                    let prettyJsonString = try bodyData.prettyJSON()
+
+                if let prettyJsonString = try? bodyData.prettyJSON() {
                     let commandLineString = prettyJsonString.replacingOccurrences(of: "\"", with: "\\\"")
                     command.append(" \\\\\n -d \"\(commandLineString)\"")
 
-                } catch {
+                } else if let urlEncodedParams = try? bodyData.urlEncodedParameters() {
+
+                    for (key, value) in urlEncodedParams {
+                        command.append(" \\\\\n\t--data-urlencode \"\(key)=\(value)\"")
+                    }
+
+                } else if let bodyString = String(data: bodyData, encoding: .utf8)
+                {
+                    command.append(" \\\\\n\t--data-binary \"\(bodyString)\"")
+
+                } else {
+                    command.append("\n\t# Unable to pass body data")
 
                 }
             }
