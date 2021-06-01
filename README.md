@@ -11,3 +11,6 @@ The `curlCommand` supports:
 * URL Encoded paylods
 
 I would be happy if this helps you in your project, and even happier if you have improvements
+
+© 2021 Alexander von Below, Alex@vonBelow.COm
+Published under the MIT License
